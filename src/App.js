@@ -1,23 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import Papa from "papaparse";
 
 function App() {
+  const [ids, setIds] = useState([]);
+
+  // LIFECYCLE
+  useEffect(() => {
+    fetchIds();
+  }, []);
+
+  // HANDLE FUNCTIONS
+  const fetchIds = async () => {
+    const res = await fetch("/data/updateMarketAdvanced.csv");
+    const text = await res.text();
+
+    const { data } = Papa.parse(text, { header: true });
+    return setIds(data);
+  };
+
+  const handleAlbionQuery = async ({ id }) => {
+    const apiUrl = `https://europe.albion-online-data.com/api/v2/stats/prices/${id}`;
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    console.log(data);
+  };
+
+  // MAIN RENDER
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {/* HEADER*/}
+      <header>HEADER LOCATION</header>
+      {/* MAIN DATA*/}
+      <main>
+        <ul>
+          {ids?.map((el, i) => (
+            <li onClick={() => handleAlbionQuery({ id: el?.item_id })} key={i}>
+              {el?.item_id}
+            </li>
+          ))}
+        </ul>
+      </main>
     </div>
   );
 }
