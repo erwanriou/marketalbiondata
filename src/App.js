@@ -118,7 +118,7 @@ function App() {
                 <td>{item.sell_price_max}</td>
                 <td>{item.buy_price_min}</td>
                 <td>{item.buy_price_max}</td>
-                <td>{`${item?.difference_pct}%`}</td>
+                <td>{`${Number(item?.difference_pct).toFixed(2)}%`}</td>
               </tr>
             ))}
           </tbody>
